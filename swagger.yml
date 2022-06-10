@@ -1,0 +1,276 @@
+swagger: "2.0"
+info:
+  description: "This is a sample coupon generator and redeem server."
+  version: "1.0.0"
+  title: "Coupons"
+  contact:
+    email: "chalisebivek@gmail.com"
+  license:
+    name: "Apache 2.0"
+    url: "http://www.apache.org/licenses/LICENSE-2.0.html"
+host: "localhost:8000"
+schemes:
+- "https"
+- "http"
+
+paths:
+  /coupon/create/:
+    post:
+      tags:
+      - "create-coupon"
+      summary: "Add a new coupon to the store."
+      description: ""
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      parameters:
+      - in: "body"
+        name: "body"
+        description: "Coupon object that needs to be added."
+        required: true
+        schema:
+          type: "array"
+          items:
+            $ref: "#/definitions/CouponCreateBody"
+      responses:
+        "400":
+          description: "Coupon name already exist"
+          schema:
+            $ref: "#/definitions/CouponCreateNameAlreadyExist"
+        "200":
+          description: "Coupons created"
+          schema:
+            $ref:  "#/definitions/CouponCreateSuccess"
+  
+  /coupon/redeem/:
+    get:
+      tags:
+      - 'redeem coupon'
+      summary: "Redeem a random coupon from available coupons."
+      description: ""
+      produces:
+      - "application/json"
+      responses:
+        "200":
+          description: "Coupons object with discount value"
+          schema:
+            $ref:  "#/definitions/CouponRedeemSuccess"
+        "400":
+          description: "Occurs when all coupons are expired or redeemed."
+          schema:
+            $ref: "#/definitions/CouponRedeemFailure"
+
+  /coupon/edit/{id}/:
+    put:
+      tags:
+      - 'edit coupon'
+      summary: "Redeem a random coupon from available coupons."
+      description: ""
+      produces:
+      - "application/json"
+      parameters:
+      - name: "id"
+        type: "integer"
+        in: "path"
+        required: true
+        description: "ID of coupon to update"
+      - name: "body"
+        in: "body"
+        description: "Coupon object that needs to be added."
+        required: true
+        schema:
+          type: "array"
+          items:
+            $ref: "#/definitions/CouponEditBody"
+      responses:
+        "200":
+          description: ""
+          schema:
+            $ref:  "#/definitions/CouponEditSuccess"
+        "400":
+          description: "Occurs when coupon name given in body already exist."
+          schema:
+            $ref: "#/definitions/CouponCreateNameAlreadyExist"
+
+  /coupon/delete/{id}/:
+    delete:
+      tags:
+      - 'delete coupon'
+      summary: "Redeem a random coupon from available coupons."
+      description: ""
+      produces:
+      - "application/json"
+      parameters:
+      - name: "id"
+        type: "integer"
+        in: "path"
+        required: true
+        description: "ID of coupon to update"
+      responses:
+        "200":
+          description: ""
+          schema:
+            $ref:  "#/definitions/CouponEditSuccess"
+
+definitions:
+  CouponCreateBody:
+    type: "object"
+    required:
+    - "name"
+    - "discount_type"
+    - "discount_value"
+    properties:
+      name:
+        type: "string"
+        example: "Coupon X"
+      expiry_date:
+        type: "string"
+        example: "2022-06-25T06:48:36.192Z"
+        description: "Expiry date (in ISO fromat) for coupon. By default set as 30 days after coupon created."
+      discount_type:
+        type: "string"
+        description: "Coupon type: % or $"
+        enum:
+        - "percentage"
+        - "value"
+      discount_value:
+        type: "integer"
+        example: 2
+        description: "Coupon value"
+
+  CouponEditBody:
+    type: "object"
+    properties:
+      name:
+        type: "string"
+        example: "Coupon X"
+      expiry_date:
+        type: "string"
+        example: "2022-06-25T06:48:36.192Z"
+        description: "Expiry date (in ISO fromat) for coupon. By default set as 30 days after coupon created."
+      discount_type:
+        type: "string"
+        description: "Coupon type: % or $"
+        enum:
+        - "percentage"
+        - "value"
+      discount_value:
+        type: "integer"
+        example: 2
+        description: "Coupon value"
+      is_redeemed:
+        type: "boolean"
+        example: true
+        description: "Checks if redemeed"
+  
+  Coupon:
+    type: "object"
+    required:
+    - "name"
+    - "discount_type"
+    - "discount_value"
+    properties:
+      id:
+        type: "integer"
+        example: 1
+      name:
+        type: "string"
+        example: "Coupon X"
+      expiry_date:
+        type: "string"
+        example: "2022-06-25T06:48:36.192Z"
+        description: "Expiry date (in ISO fromat) for coupon. By default set as 30 days after coupon created."
+      discount_type:
+        type: "string"
+        description: "Coupon type: % or $"
+        enum:
+        - "percentage"
+        - "value"
+      discount_value:
+        type: "integer"
+        example: 2
+        description: "Coupon value"
+
+
+  CouponCreateNameAlreadyExist:
+    type: "object"
+    properties:
+      success: 
+        type: "boolean"
+        example: false
+      message: 
+        type: "string"
+        example: "Coupon with name(s) 'name' already exist."
+  
+  CouponCreateSuccess:
+    type: 'object'
+    properties:
+      success:
+        type: 'boolean'
+        example: true
+      message:
+        type: "string"
+        example: "1 coupon(s) created."
+      data:
+        type: "array"
+        items:
+          $ref: "#/definitions/Coupon"
+
+  CouponEditSuccess:
+    type: 'object'
+    properties:
+      success:
+        type: 'boolean'
+        example: true
+      message:
+        type: "string"
+        example: "Coupon updated successfully."
+      data:
+        type: "array"
+        items:
+          $ref: "#/definitions/Coupon"
+
+  CouponDeleteSuccess:
+    type: 'object'
+    properties:
+      success:
+        type: 'boolean'
+        example: true
+      message:
+        type: "string"
+        example: "Coupon deleted successfully."
+
+  CouponRedeemSuccess:
+    type: 'object'
+    properties:
+      success:
+        type: 'boolean'
+        example: true
+      message:
+        type: "string"
+        example: "Success"
+      data:
+        type: "object"
+        properties:
+          type: 
+            type: "string"
+            enum:
+            - "percentage"
+            - "value"
+          value:
+            type: "integer"
+            example: "20"
+
+  CouponRedeemFailure:
+    type: 'object'
+    properties:
+      success:
+        type: 'boolean'
+        example: false
+      message:
+        type: 'string'
+        example: 'Coupons not available.'
+
+
+          
