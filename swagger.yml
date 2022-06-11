@@ -79,8 +79,6 @@ paths:
         description: "Coupon object that needs to be added."
         required: true
         schema:
-          type: "array"
-          items:
             $ref: "#/definitions/CouponEditBody"
       responses:
         "200":
