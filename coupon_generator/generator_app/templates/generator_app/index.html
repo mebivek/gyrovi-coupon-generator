@@ -97,28 +97,31 @@ button {
       element.style.transform = `rotateY(${rotation}deg)`;
     }
     async function draw_cupon() {
+      const button = document.querySelector("button");
+      button.disabled = true;
       console.log("clicked")
       var value_elem = document.getElementById("value");
+
       var message_elem = document.getElementById("message");
       if (value_elem){
         value_elem.parentNode.removeChild(value_elem);
       }
       var url = `${location.origin}/coupon/redeem`
       fetch(url, {
-          headers:{
-              'Accept': 'application/json',
-              'X-Requested-With': 'XMLHttpRequest', //Necessary to work with request.is_ajax()
-          },
+        headers:{
+          'Accept': 'application/json',
+          'X-Requested-With': 'XMLHttpRequest', //Necessary to work with request.is_ajax()
+        },
       })
       .then(response => {
           return response.json() //Convert response to JSON
-      })
-      .then(data => {
-        console.log(data)
-        let isSuccess = data.success
-        if (isSuccess){
-          var front = document.getElementById('front-side');
-          var rotation = 3600 * counter
+        })
+        .then(data => {
+          console.log(data)
+          let isSuccess = data.success
+          if (isSuccess){
+            var front = document.getElementById('front-side');
+            var rotation = 3600 * counter
           console.log(front)
           var result = rotate(front, rotation)
           var stop = setTimeout(function(){
@@ -136,7 +139,8 @@ button {
             message = `Congratulations! you got discount coupon of ${text}`
             document.getElementById('message').innerHTML = message;
             counter += 1
-  
+            button.disabled = true;
+            
           },600);
         } else {
           location.reload();
