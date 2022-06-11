@@ -123,3 +123,12 @@ STATIC_URL = 'static/'
 # https://docs.djangoproject.com/en/4.0/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+
+try:
+    from coupon_generator.local_settings import *
+except ImportError as e:
+    try:
+        from coupon_generator.local_settings_sample import *
+    except:
+        raise Exception("Failed to import local_settings", str(e))
