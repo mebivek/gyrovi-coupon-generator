@@ -8,9 +8,8 @@ info:
   license:
     name: "Apache 2.0"
     url: "http://www.apache.org/licenses/LICENSE-2.0.html"
-host: "localhost:8000"
+host: "43.204.253.48:8000"
 schemes:
-- "https"
 - "http"
 
 paths:
