@@ -35,3 +35,10 @@ To get started, please run following commands
 
 Now go to the browser and open http://localhost:8000
 
+## Testing
+
+Run following command with active virtual enviroment.
+
+```
+    python manage.py test
+```
