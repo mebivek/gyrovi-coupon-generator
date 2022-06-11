@@ -108,7 +108,7 @@ paths:
         "200":
           description: ""
           schema:
-            $ref:  "#/definitions/CouponEditSuccess"
+            $ref:  "#/definitions/CouponDeleteSuccess"
 
 definitions:
   CouponCreateBody:
